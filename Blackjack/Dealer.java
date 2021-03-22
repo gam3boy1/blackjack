@@ -9,7 +9,8 @@ public class Dealer extends Hand {
     }
   }
 
-  public boolean didWin() {
-    return this.getValue() > 16 && this.getValue() < 21;
+  @Override
+  public boolean didLose() {
+    return this.getValue() < 16 && super.didLose();
   }
 }

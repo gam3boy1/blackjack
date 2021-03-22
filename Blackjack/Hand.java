@@ -30,4 +30,8 @@ public abstract class Hand {
     return this.value > 21;
   }
 
+  public ArrayList<Card> getPlayerDeck() {
+    return this.hand;
+  }
+
 }

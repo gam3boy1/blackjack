@@ -10,10 +10,11 @@ public class MyTransitionListener extends ComponentAdapter {
         JPanel currentPanel = ((JPanel) e.getSource());
         switch (currentPanel.getName()) {
             case "Home":
-            Main.setGUI(new GameGUI());
+            int money = ((HomeGUI) Main.getGUI()).getMoneyInput();
+            Main.setGUI(new GameGUI(money));
             break;
 
-            default:
+            case "Game":
             Main.setGUI(new HomeGUI());
             break;
         }

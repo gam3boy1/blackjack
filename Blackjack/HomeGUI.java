@@ -23,13 +23,23 @@ public class HomeGUI extends GUI implements ActionListener {
 
     this.getPanel().add(introLabel);
     this.getPanel().add(infoLabel);
+    this.getPanel().add(moneyTextField);
     this.getPanel().add(onePlayerButton);
 
     this.setComponentAlignment();
   }
 
+  public int getMoneyInput() {
+    return Integer.parseInt(this.moneyTextField.getText());
+  }
+
   @Override
   public void actionPerformed(ActionEvent e) {
-    this.getPanel().setVisible(false);
+    try {
+      Integer.parseInt(moneyTextField.getText());
+      this.getPanel().setVisible(false);
+    } catch (Exception exception){
+      showMessage("Error!", "Please input integers only!");
+    }
   }
 }
