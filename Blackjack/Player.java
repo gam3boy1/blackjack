@@ -1,16 +1,13 @@
 package Blackjack;
 
-import java.util.ArrayList;
-
 public class Player extends Hand {
-  private int money;
 
-  public Player(int money) {
+  public Player() {
     super();
-    this.money = money;
   }
-  
-  public int getMoney() {
-    return this.money;
+
+  @Override
+  public boolean didLose() {
+    return this.getValue() > 21;
   }
 }

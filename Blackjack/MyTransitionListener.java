@@ -10,7 +10,7 @@ public class MyTransitionListener extends ComponentAdapter {
         JPanel currentPanel = ((JPanel) e.getSource());
         switch (currentPanel.getName()) {
             case "Home":
-            int money = ((HomeGUI) Main.getGUI()).getMoneyInput();
+            double money = ((HomeGUI) Main.getGUI()).getMoneyInput();
             Main.setGUI(new GameGUI(money));
             break;
 
@@ -19,8 +19,8 @@ public class MyTransitionListener extends ComponentAdapter {
             break;
         }
         currentPanel.removeAll();
-        Main.getFrame().validate();
-        Main.getFrame().repaint();
-        Main.getFrame().add(Main.getGUI().getPanel(), BorderLayout.CENTER);
+        currentPanel.getParent().revalidate();
+        currentPanel.getParent().repaint();
+        currentPanel.getParent().add(Main.getGUI().getPanel(), BorderLayout.CENTER);
     }
 }

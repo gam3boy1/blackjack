@@ -9,18 +9,7 @@ public class MyMenuListener extends AbstractAction {
   @Override
     public void actionPerformed(ActionEvent e) {
         JMenuItem menuItem = ((JMenuItem) e.getSource());
-        switch (menuItem.getName()) {
-            case "Show all stats":
-            // ((GameGUI) Main.getGUI()).showStats();
-            break;
-
-            case "Show/hide basic stats":
-            // ((GameGUI) Main.getGUI()).setBasicStatsVisibility();
-            break;
-
-            case "View solution":
-            // ((GameGUI) Main.getGUI()).showSolution();
-            break;
+        switch (menuItem.getName().toLowerCase()) {
 
             default:
             Main.getGUI().getPanel().setVisible(false);

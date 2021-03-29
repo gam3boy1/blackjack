@@ -7,7 +7,8 @@ import java.awt.event.*;
 public class HomeGUI extends GUI implements ActionListener {
   private JLabel introLabel, infoLabel;
   private JButton onePlayerButton;
-  private JTextField moneyTextField;
+  private double moneyInput;
+  private static String[] gameOptions = {"Wager", "Bet", "Cancel"};
   
   public HomeGUI() {
     super("Home");
@@ -15,7 +16,6 @@ public class HomeGUI extends GUI implements ActionListener {
 
     introLabel = new JLabel("Welcome to Blackjack!");
     infoLabel = new JLabel("Type the amount of money you would like to bet: ");
-    moneyTextField = new JTextField();
     onePlayerButton = new JButton("Play!");
 
     introLabel.setFont(new Font(introLabel.getFont().getName(), Font.PLAIN, 60));
@@ -23,23 +23,35 @@ public class HomeGUI extends GUI implements ActionListener {
 
     this.getPanel().add(introLabel);
     this.getPanel().add(infoLabel);
-    this.getPanel().add(moneyTextField);
     this.getPanel().add(onePlayerButton);
 
     this.setComponentAlignment();
   }
 
-  public int getMoneyInput() {
-    return Integer.parseInt(this.moneyTextField.getText());
+  public double getMoneyInput() {
+    return moneyInput;
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    try {
-      Integer.parseInt(moneyTextField.getText());
-      this.getPanel().setVisible(false);
-    } catch (Exception exception){
-      showMessage("Error!", "Please input integers only!");
+    int result = JOptionPane.showOptionDialog(Main.getFrame(),  "Would you like to wager or bet?", "Wager or Bet?", 
+    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameOptions, gameOptions[2]);
+
+    if (result == JOptionPane.YES_OPTION || result == JOptionPane.NO_OPTION) {
+      boolean exceptionOccured;
+      do {
+        exceptionOccured = false;
+        String input = JOptionPane.showInputDialog(Main.getFrame(), "Enter the amount of money you would like to " + gameOptions[result].toLowerCase() + ":");
+        if (input.isEmpty()) { break; }
+        try {
+          moneyInput = Double.parseDouble(input);
+          this.getPanel().setVisible(false);
+        } catch (Exception exception){
+          exceptionOccured = true;
+          showMessage("Error!", "Please only enter doubles/integers!");
+        }
+      } while (exceptionOccured);
+      
     }
   }
 }

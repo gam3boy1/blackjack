@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class GUI {
     JPanel panel;
+    public static Font defaultFont = javax.swing.UIManager.getDefaults().getFont("Label.font");
     private HashMap<String, Font> fontsMap;
 
     private enum fonts {
@@ -41,8 +42,8 @@ public class GUI {
         panel.setName(panelName);
     }
 
-    public void setComponentAlignment() {
-        for (Component component : panel.getComponents()) {
+    public void setComponentAlignment(JPanel tempPanel) {
+        for (Component component : tempPanel.getComponents()) {
             if (component instanceof JLabel) {
                 ((JLabel) component).setHorizontalAlignment(JLabel.CENTER);
             } else if (component instanceof JButton) {
@@ -51,6 +52,10 @@ public class GUI {
                 ((JTextField) component).setHorizontalAlignment(JTextField.CENTER);
             }
         }
+    } 
+
+    public void setComponentAlignment() {
+        this.setComponentAlignment(this.panel);
     }
 
     protected void showMessage(String title, String message) {
@@ -60,8 +65,6 @@ public class GUI {
     private static void setUIFont(String component, Font font, int fontSize) {
         UIManager.put(component, new Font(font.getName(), Font.PLAIN, fontSize));
     }
-
-    
 
     public JPanel getPanel() {
         return panel;

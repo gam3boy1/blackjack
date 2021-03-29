@@ -26,9 +26,7 @@ public abstract class Hand {
     return this.value;
   }
 
-  public boolean didLose() {
-    return this.value > 21;
-  }
+  public abstract boolean didLose();
 
   public ArrayList<Card> getPlayerDeck() {
     return this.hand;
