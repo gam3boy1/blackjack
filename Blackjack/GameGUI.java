@@ -37,7 +37,6 @@ public class GameGUI extends GUI implements ActionListener {
     playerPanel = new JPanel();
     dealerPanel = new JPanel();
 
-    Dimension frameSize = Main.getFrame().getSize();
     gamePanel.setLayout(new GridLayout(1, 0));
     playerPanel.setLayout(new GridLayout(1, 0));
     dealerPanel.setLayout(new GridLayout(1, 0));
@@ -77,19 +76,33 @@ public class GameGUI extends GUI implements ActionListener {
       addCard(playerPanel, player);
 
       if (player.didLose()) {
-        showMessage("Dealer Won", "Sorry, the dealer won the game, because your deck value went above 21. Your deck value was: " + player.getValue());
-        money -= moneyAmount;
+        showMessage("Dealer Won", "Sorry, the dealer won the game, because your deck value went above 21. " + 
+        "\nYour deck value was: " + player.getValue());
+        loseMoney();
         restartGame();
       }
     } else {
-      showMessage("Dealer's turn", "The dealer will now keep hitting until the value of his cards is greater than 16. Currently the value of his deck is: " + dealer.getValue());
+      showMessage("Dealer's turn", "The dealer will now keep hitting until the value of his cards is greater than 16." + 
+      "\nCurrently the value of his deck is: " + dealer.getValue());
       ((Dealer) dealer).hitTillDone();
       if (dealer.didLose() || (player.getValue() > dealer.getValue())) {
-        showMessage("You won!", "The dealer got a value greater than 21! The value of his deck is: " + dealer.getValue());
+        showMessage("You won!", "The dealer got a value greater than 21!" + 
+        "\nThe value of his deck is: " + dealer.getValue());
         gainMoney();
-      } else {
-        showMessage("Dealer Won", "Sorry, the dealer was able to have a deck value greater than 16 and less, that was greater than the value of your hand/deck. The dealer had a value of: " + dealer.getValue());
+      } else if (!dealer.didLose()) {
+        showMessage("Dealer won!", "Sorry, the dealer was able to have a deck value greater than 16 and less, that was greater than the value of your hand/deck. " +
+        "\nThe dealer had a value of: " + dealer.getValue());
         loseMoney();
+      } else {
+        if (player.getValue() > dealer.getValue()) {
+          showMessage("You Won!", "The value of your hand is greater than the dealer's!" + 
+          "\nThe value of your hand was: " + player.getValue() + ", while the value of the dealer's hand was: " + dealer.getValue());
+          gainMoney();
+        } else {
+          showMessage("Dealer won!", "Sorry, the value of the dealer's hand is greater than yours." + 
+          "\nThe value of the dealer's hand was: " + dealer.getValue() + ", while the value of your hand was: " + player.getValue());
+          loseMoney();
+        }
       }
       restartGame();
     }
@@ -103,7 +116,7 @@ public class GameGUI extends GUI implements ActionListener {
     if (money <= 0) {
       showMessage("You lost all your money!", "Sorry, you lost all of your money! You have to restart the entire game now :(");
       this.getPanel().setVisible(false);
-      return;
+      // return;
     } else {
       playerPanel.removeAll();
       dealerPanel.removeAll();

@@ -37,7 +37,6 @@ class Dealer extends Hand {
 
   public void hitTillDone() {
     while (this.getValue() <= 16) {
-      // System.out.println(this.getValue());
       hit();
     }
   }

@@ -11,7 +11,6 @@ public class Main {
     public static void main(String[] args) {
         initializeMenuBar();
         initializeFrame();
-        System.out.println('\u2660');
     }
 
     private static void initializeFrame() {
@@ -30,9 +29,6 @@ public class Main {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         fileMenu.add(new JMenuItem("New/Restart"));
-        fileMenu.add(new JMenuItem("Show all stats"));
-        fileMenu.add(new JMenuItem("Show/hide basic stats"));
-        fileMenu.add(new JMenuItem("View solution"));
 
         menuBar.add(fileMenu);
 

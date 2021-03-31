@@ -82,15 +82,6 @@ public class Deck {
         }
     }
 
-    public static void dealCards() {
-        // int numOfPeople = Player.getPlayers().size();
-        // for (int i = 0; i < numOfPeople; i++) {
-        //     for (int j = 0; j < Deck.deckArray.length/numOfPeople; j++) {
-        //         Player.getPlayers().get(i).getPlayerDeck()[j] = drawCard();
-        //     }
-        // }
-    }
-
     public static void sortDeck() {
         for (int i = 0; i < numOfCardsLeft; i++) {
             for (int j = i; j > 0; j--) {

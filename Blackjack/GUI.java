@@ -60,6 +60,7 @@ public class GUI {
 
     protected void showMessage(String title, String message) {
         JOptionPane.showMessageDialog(Main.getFrame(), message, title, JOptionPane.OK_OPTION);
+
     }
 
     private static void setUIFont(String component, Font font, int fontSize) {

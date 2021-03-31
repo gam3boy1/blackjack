@@ -1,6 +1,9 @@
 package Blackjack;
 
 import javax.swing.*;
+
+import Blackjack.MyTransitionListener.gameType;
+
 import java.awt.Font;
 import java.awt.event.*;
 
@@ -8,6 +11,7 @@ public class HomeGUI extends GUI implements ActionListener {
   private JLabel introLabel, infoLabel;
   private JButton onePlayerButton;
   private double moneyInput;
+  private gameType gameChoice;
   private static String[] gameOptions = {"Wager", "Bet", "Cancel"};
   
   public HomeGUI() {
@@ -28,8 +32,12 @@ public class HomeGUI extends GUI implements ActionListener {
     this.setComponentAlignment();
   }
 
+  public gameType getGameChoice() {
+    return this.gameChoice;
+  }
+
   public double getMoneyInput() {
-    return moneyInput;
+    return this. moneyInput;
   }
 
   @Override
@@ -45,6 +53,7 @@ public class HomeGUI extends GUI implements ActionListener {
         if (input.isEmpty()) { break; }
         try {
           moneyInput = Double.parseDouble(input);
+          gameChoice = (result == JOptionPane.YES_OPTION)? gameType.WAGER : gameType.BET;
           this.getPanel().setVisible(false);
         } catch (Exception exception){
           exceptionOccured = true;

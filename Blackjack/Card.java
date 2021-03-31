@@ -62,6 +62,7 @@ public class Card {
 
             case "A":
             idChar = '1';
+            break;
 
             case "J":
             idChar = 'B';
@@ -77,6 +78,7 @@ public class Card {
 
             default:
             idChar = (char) (Integer.parseInt(id) + '0');
+            break;
         };
         
         /* 
@@ -84,7 +86,6 @@ public class Card {
         
         */
         unicodeString = "0001F0" + suiteChar + idChar;
-        System.out.println(this.toString()+ ": " + unicodeString);
         int codePoint = Integer.parseInt(unicodeString, 16);
         return new String(Character.toChars(codePoint));
     }

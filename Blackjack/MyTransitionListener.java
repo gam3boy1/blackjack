@@ -11,10 +11,11 @@ public class MyTransitionListener extends ComponentAdapter {
     @Override
     public void componentHidden(ComponentEvent e) {
         JPanel currentPanel = ((JPanel) e.getSource());
+
         switch (currentPanel.getName()) {
             case "Home":
-            double money = ((HomeGUI) Main.getGUI()).getMoneyInput();
-            Main.setGUI(new GameGUI(gameType.BET, ((HomeGUI) Main.getGUI()).getMoneyInput()));
+            HomeGUI home = ((HomeGUI) Main.getGUI());
+            Main.setGUI(new GameGUI(home.getGameChoice(), home.getMoneyInput()));
             break;
 
             case "Game":
