@@ -1,11 +1,5 @@
 package Blackjack;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.Character.UnicodeScript;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 public class Card {
     private String id;
     private char suite;
@@ -82,15 +76,16 @@ public class Card {
             break;
 
             default:
-            idChar = id.toCharArray()[0];
+            idChar = (char) (Integer.parseInt(id) + '0');
         };
         
         /* 
         Logic:
         
         */
-        unicodeString = "0x0001F0" + suiteChar + idChar;
-        int codePoint = Integer.parseInt(unicodeString.substring(2),16);
+        unicodeString = "0001F0" + suiteChar + idChar;
+        System.out.println(this.toString()+ ": " + unicodeString);
+        int codePoint = Integer.parseInt(unicodeString, 16);
         return new String(Character.toChars(codePoint));
     }
 

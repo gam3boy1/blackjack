@@ -1,30 +1,31 @@
 package Blackjack;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+
+import Blackjack.MyTransitionListener.gameType;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 
 public class GameGUI extends GUI implements ActionListener {
 
   private Hand player, dealer;
   private JLabel moneyLabel;
-  private JLabel playerValueLabel, dealerValueLabel;
-  private JPanel gamePanel, playerPanel, dealerPanel, playerCardPanel, dealerCardPanel;
+  private JPanel gamePanel, buttonPanel, playerPanel, dealerPanel;
   private JButton hitButton, stayButton;
-  private double money = 100.0;
-  private double betMoney;
+  private double moneyAmount, money;
+  private gameType moneyType;
 
-  public GameGUI(double betMoney) {
+  public GameGUI(gameType moneyType, double moneyAmount) {
     super("Game");
     Main.setMenuVisibility(true);
-    this.betMoney = betMoney;
+    this.moneyAmount = moneyAmount;
+    if (moneyType == gameType.WAGER) {
+      money = moneyAmount;
+    } else {
+      money = 100.0;
+    }
     Deck.initDeck();
     Deck.shuffle();
 
@@ -32,50 +33,36 @@ public class GameGUI extends GUI implements ActionListener {
     dealer = new Dealer();
     moneyLabel = new JLabel();
     gamePanel = new JPanel();
+    buttonPanel = new JPanel();
     playerPanel = new JPanel();
     dealerPanel = new JPanel();
-    playerCardPanel = new JPanel();
-    playerValueLabel = new JLabel();
-    dealerCardPanel = new JPanel();
-    dealerValueLabel = new JLabel();
 
     Dimension frameSize = Main.getFrame().getSize();
     gamePanel.setLayout(new GridLayout(1, 0));
-    playerPanel.setLayout(new GridLayout(0, 1));
-    dealerPanel.setLayout(new GridLayout(0, 1));
-    playerCardPanel.setLayout(new GridLayout(1, 0));
-    dealerCardPanel.setLayout(new GridLayout(1, 0));
+    playerPanel.setLayout(new GridLayout(1, 0));
+    dealerPanel.setLayout(new GridLayout(1, 0));
 
     hitButton = new JButton("Hit!");
     stayButton = new JButton("Stay!");
     hitButton.addActionListener(this);
     stayButton.addActionListener(this);
 
-    JPanel tempPanel = new JPanel();
-    tempPanel.setLayout(new GridLayout(0, 1));
-    tempPanel.add(hitButton);
-    tempPanel.add(stayButton);
-    gamePanel.setBorder(new EmptyBorder(0, 0, 100, 0));
-    tempPanel.setBorder(new EmptyBorder(100, 0, 0, 0));
+    buttonPanel.setLayout(new GridLayout(0, 1));
+    buttonPanel.add(hitButton);
+    buttonPanel.add(stayButton);
+    buttonPanel.setBorder(new EmptyBorder(100, 0, 0, 0));
 
-    hitButton.doClick();
-    hitButton.doClick();
-    addCard(dealerCardPanel, dealer);
-    addCard(dealerCardPanel, dealer);
+    addCard(playerPanel, player);
+    addCard(playerPanel, player);
+    addCard(dealerPanel, dealer);
+    addCard(dealerPanel, dealer);
 
-    playerPanel.add(playerValueLabel);
-    playerPanel.add(playerCardPanel);
-    dealerPanel.add(dealerValueLabel);
-    dealerPanel.add(dealerCardPanel);
     gamePanel.add(playerPanel);
     gamePanel.add(dealerPanel);
-    
-    playerPanel.remove(playerValueLabel);
-    dealerPanel.remove(dealerValueLabel);
 
     this.getPanel().add(moneyLabel);
     this.getPanel().add(gamePanel);
-    this.getPanel().add(tempPanel);
+    this.getPanel().add(buttonPanel);
 
     setComponentAlignment(playerPanel);
     setComponentAlignment(dealerPanel);
@@ -87,11 +74,11 @@ public class GameGUI extends GUI implements ActionListener {
     JButton button = ((JButton) e.getSource());
 
     if (button.getText().equalsIgnoreCase("hit!")) {
-      addCard(playerCardPanel, player);
+      addCard(playerPanel, player);
 
       if (player.didLose()) {
         showMessage("Dealer Won", "Sorry, the dealer won the game, because your deck value went above 21. Your deck value was: " + player.getValue());
-        money -= betMoney;
+        money -= moneyAmount;
         restartGame();
       }
     } else {
@@ -99,10 +86,10 @@ public class GameGUI extends GUI implements ActionListener {
       ((Dealer) dealer).hitTillDone();
       if (dealer.didLose() || (player.getValue() > dealer.getValue())) {
         showMessage("You won!", "The dealer got a value greater than 21! The value of his deck is: " + dealer.getValue());
-        money += betMoney;
+        gainMoney();
       } else {
         showMessage("Dealer Won", "Sorry, the dealer was able to have a deck value greater than 16 and less, that was greater than the value of your hand/deck. The dealer had a value of: " + dealer.getValue());
-        money -= betMoney;
+        loseMoney();
       }
       restartGame();
     }
@@ -118,26 +105,44 @@ public class GameGUI extends GUI implements ActionListener {
       this.getPanel().setVisible(false);
       return;
     } else {
-      playerCardPanel.removeAll();
-      dealerCardPanel.removeAll();
+      playerPanel.removeAll();
+      dealerPanel.removeAll();
       hitButton.doClick();
       hitButton.doClick();
-      addCard(dealerCardPanel, dealer);
-      addCard(dealerCardPanel, dealer);
+      addCard(dealerPanel, dealer);
+      addCard(dealerPanel, dealer);
     }
   } 
 
-  // Benefits of polymorphism
   private void addCard(JPanel panel, Hand hand) {
     JLabel newCardLabel = new JLabel(hand.hit().getUnicode());
-    newCardLabel.setFont(new Font(GUI.defaultFont.getName(), Font.PLAIN, 150));
-    panel.add(newCardLabel);
+    if (panel.equals(dealerPanel) && hand.equals(dealer) && dealerPanel.getComponentCount() == 0) {
+      newCardLabel.setText(new String(Character.toChars(Integer.parseInt("0001F0A0", 16))));
+    }
+
+    newCardLabel.setFont(new Font(GUI.defaultFont.getName(), Font.PLAIN, 200));
     newCardLabel.setHorizontalAlignment(JLabel.CENTER);
+
+    panel.add(newCardLabel);
     panel.validate();
     panel.repaint();
 
     moneyLabel.setText(String.format("Total Money: $%.2f", money));
-    playerValueLabel.setText("Total value of your deck: " + player.getValue());
-    dealerValueLabel.setText("Total value of the dealer's deck: " + dealer.getValue());
+  }
+
+  private void loseMoney() {
+    if (moneyType == gameType.BET) {
+      money -= moneyAmount;
+    } else {
+      money = 0.0;
+    }
+  }
+
+  private void gainMoney() {
+    if (moneyType == gameType.BET) {
+      money += moneyAmount;
+    } else {
+      money *= 2.0;
+    }
   }
 }

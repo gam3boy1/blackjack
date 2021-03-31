@@ -31,5 +31,32 @@ public abstract class Hand {
   public ArrayList<Card> getPlayerDeck() {
     return this.hand;
   }
-
 }
+
+class Dealer extends Hand {
+
+  public void hitTillDone() {
+    while (this.getValue() <= 16) {
+      // System.out.println(this.getValue());
+      hit();
+    }
+  }
+
+  @Override
+  public boolean didLose() {
+    return this.getValue() < 16 || this.getValue() > 21;
+  }
+}
+
+class Player extends Hand {
+
+  public Player() {
+    super();
+  }
+
+  @Override
+  public boolean didLose() {
+    return this.getValue() > 21;
+  }
+}
+
